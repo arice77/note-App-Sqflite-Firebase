@@ -1,4 +1,4 @@
-# ebook
+# Notes App(Offline and Online Database Enabled)
 
 A new Flutter project.
 
