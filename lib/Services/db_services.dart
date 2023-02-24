@@ -1,6 +1,5 @@
 import 'package:sqflite/sqflite.dart' as sql;
 import 'package:path/path.dart' as path;
-import 'package:sqflite/sql.dart';
 import 'package:sqflite/sqlite_api.dart';
 
 class DBHelper {

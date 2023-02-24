@@ -90,7 +90,7 @@ class NotesPage extends StatelessWidget {
                 ))
               ]);
             },
-            child: Text('emppty')),
+            child: const Text('emppty')),
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:ebook/Pages/auth_page.dart';
 import 'package:ebook/Pages/create_note_page.dart';
 import 'package:ebook/Pages/notes_page.dart';
 import 'package:ebook/Provider/note_list.dart';
+import 'package:ebook/Services/auth_services.dart';
 import 'package:ebook/firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -12,11 +13,15 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  bool isLoggedin = await AuthService().loggedIn();
+  runApp(MyApp(
+    isLoggedIn: isLoggedin,
+  ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool isLoggedIn;
+  const MyApp({super.key, required this.isLoggedIn});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +35,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           scaffoldBackgroundColor: const Color(0x000001d5),
         ),
-        home: const AuthPage(),
+        home: isLoggedIn ? const NotesPage() : const AuthPage(),
       ),
     );
   }
