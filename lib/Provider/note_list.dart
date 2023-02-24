@@ -10,7 +10,7 @@ class Notes with ChangeNotifier {
   List<Note> get notes => _notes;
   noteadd(Note note) async {
     _notes.add(note);
-    await firestoreService.createNote(
+    firestoreService.createNote(
         note.noteTitle, note.noteDescription!, note.dateCreated);
     await DBHelper.insert('notes', {
       'id': note.dateCreated.toIso8601String(),
@@ -45,6 +45,13 @@ class Notes with ChangeNotifier {
             noteDescription: e['description'] as String,
             dateCreated: DateTime.parse(e['id'] as String)))
         .toList();
+    notifyListeners();
+  }
+
+  deleteNote(DateTime id) async {
+    _notes.removeAt(_notes.indexWhere((element) => element.dateCreated == id));
+    await DBHelper.deleteNote('notes', id.toIso8601String());
+    firestoreService.deleteNote(id.toIso8601String());
     notifyListeners();
   }
 }

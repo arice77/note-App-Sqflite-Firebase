@@ -1,8 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 import 'package:path/path.dart' as path;
 import 'package:sqflite/sqlite_api.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:io';
 
 class DBHelper {
+  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   static Future<Database> database() async {
     final dbPath = await sql.getDatabasesPath();
     return sql.openDatabase(path.join(dbPath, 'notes.db'),
@@ -25,5 +29,36 @@ class DBHelper {
   static Future<int> updateNote(String table, Map<String, dynamic> data) async {
     final db = await DBHelper.database();
     return await db.update(table, data, where: 'id=?', whereArgs: [data['id']]);
+  }
+
+  static Future deleteNote(String table, String id) async {
+    final db = await DBHelper.database();
+    return await db.delete(table, where: 'id=?', whereArgs: [id]);
+  }
+
+  static Future syncfirebaseToLocal() async {
+    String sqlPath = '${await sql.getDatabasesPath()}notes.db';
+    final db = await DBHelper.database();
+    final dbBatch = db.batch();
+    if (!Directory(sqlPath).existsSync()) {
+      QuerySnapshot<Map<String, dynamic>> onlineNote = await FirebaseFirestore
+          .instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection('notes')
+          .get();
+
+      for (final n in onlineNote.docs) {
+        dbBatch.insert(
+            'notes',
+            {
+              'id': n['id'],
+              'title': n['noteTitle'],
+              'description': n['NoteDesc']
+            },
+            conflictAlgorithm: ConflictAlgorithm.replace);
+      }
+      await dbBatch.commit();
+    }
   }
 }

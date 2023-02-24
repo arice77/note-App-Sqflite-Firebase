@@ -41,7 +41,7 @@ class NotesPage extends StatelessWidget {
             style: TextStyle(color: Colors.white),
           )),
       body: FutureBuilder(
-        future: Provider.of<Notes>(context, listen: false).fetchNotes(),
+        future: Provider.of<Notes>(context).fetchNotes(),
         builder: (context, snapshot) => Consumer<Notes>(
             builder: (context, value, child) {
               return Column(children: [
@@ -85,7 +85,14 @@ class NotesPage extends StatelessWidget {
                   mainAxisSpacing: 15,
                   crossAxisSpacing: 10,
                   itemBuilder: (context, index) {
-                    return NoteCard(notes: value.notes, index: index);
+                    return Dismissible(
+                        direction: DismissDirection.horizontal,
+                        onDismissed: (_) {
+                          value.deleteNote(value.notes[index].dateCreated);
+                        },
+                        key: Key(
+                            value.notes[index].dateCreated.toIso8601String()),
+                        child: NoteCard(notes: value.notes, index: index));
                   },
                 ))
               ]);

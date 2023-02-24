@@ -1,3 +1,4 @@
+import 'package:ebook/Services/db_services.dart';
 import 'package:ebook/Services/firestore_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -33,20 +34,21 @@ class AuthService {
 
   Future logIn(String email, String password, BuildContext context) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    try {
-      await firebaseAuth.signInWithEmailAndPassword(
-          email: email, password: password);
-      if (firebaseAuth.currentUser != null) {
-        pref.setBool(login, true);
-        return true;
-      }
-    } on FirebaseException catch (e) {
-      return ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.message!)));
-    } catch (e) {
-      return ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Something went wrong')));
+    // try {
+    await firebaseAuth.signInWithEmailAndPassword(
+        email: email, password: password);
+    if (firebaseAuth.currentUser != null) {
+      pref.setBool(login, true);
+      await DBHelper.syncfirebaseToLocal();
+      return true;
     }
+    // } on FirebaseException catch (e) {
+    //   return ScaffoldMessenger.of(context)
+    //       .showSnackBar(SnackBar(content: Text(e.message!)));
+    // } catch (e) {
+    //   return ScaffoldMessenger.of(context)
+    //       .showSnackBar(const SnackBar(content: Text('Something went wrong')));
+    // }
   }
 
   Future<bool> loggedIn() async {

@@ -16,7 +16,7 @@ class FirestoreService {
         .collection('users')
         .doc(firebaseAuth.currentUser!.uid)
         .collection('notes')
-        .doc(DateTime.now().toString())
+        .doc(id.toIso8601String())
         .set({
       'noteTitle': noteTitle,
       'NoteDesc': noteDesc,
@@ -35,5 +35,14 @@ class FirestoreService {
       'NoteDesc': noteDesc,
       'id': id.toString()
     });
+  }
+
+  Future deleteNote(String id) async {
+    return await firebaseFirestore
+        .collection('users')
+        .doc(firebaseAuth.currentUser!.uid)
+        .collection('notes')
+        .doc(id)
+        .delete();
   }
 }
