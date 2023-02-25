@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 class Notes with ChangeNotifier {
   FirestoreService firestoreService = FirestoreService();
   DBHelper dbHelper = DBHelper();
+  List<Note> _notes = [];
+  List<Note> get notes => _notes;
   String _searchQuery = '';
 
   String get searchQuery => _searchQuery;
-  List<Note> _notes = [];
-  List<Note> get notes => _notes;
   void setSearchQuery(String query) {
     _searchQuery = query;
     notifyListeners();

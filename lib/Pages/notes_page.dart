@@ -1,6 +1,9 @@
 import 'package:ebook/Pages/create_note_page.dart';
+import 'package:ebook/Pages/search_note_page.dart';
 import 'package:ebook/Provider/note_list.dart';
 import 'package:ebook/Widgets/note_card.dart';
+import 'package:ebook/Widgets/notes_grid.dart';
+import 'package:ebook/Widgets/search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
@@ -11,17 +14,6 @@ class NotesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<Notes>(context);
-    final search = provider.searchQuery;
-    final notes = search.isEmpty
-        ? provider.notes
-        : provider.notes
-            .where((note) =>
-                note.noteTitle.toLowerCase().contains(search.toLowerCase()) ||
-                note.noteDescription!
-                    .toLowerCase()
-                    .contains(search.toLowerCase()))
-            .toList();
     return Scaffold(
         floatingActionButton: FloatingActionButton(
             backgroundColor: const Color.fromARGB(255, 50, 104, 254),
@@ -51,59 +43,29 @@ class NotesPage extends StatelessWidget {
               'Notes',
               style: TextStyle(color: Colors.white),
             )),
-        body: Column(children: [
-          Card(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0)),
-            color: const Color.fromARGB(255, 22, 28, 39),
-            elevation: 10,
-            child: TextField(
-              onChanged: (searchTerm) {
-                provider.setSearchQuery(searchTerm);
-              },
-              decoration: InputDecoration(
-                prefixIcon: const Icon(
-                  Icons.search,
-                  color: Color.fromARGB(94, 255, 255, 255),
-                ),
-                hintText: '     Search',
-                hintStyle:
-                    const TextStyle(color: Color.fromARGB(94, 255, 255, 255)),
-                fillColor: const Color.fromARGB(255, 11, 0, 69),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.transparent),
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.transparent),
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-              ),
-              style: const TextStyle(color: Colors.white),
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Expanded(
-              child: MasonryGridView.count(
-            itemCount: notes.length,
-            crossAxisCount: 2,
-            mainAxisSpacing: 15,
-            crossAxisSpacing: 10,
-            itemBuilder: (context, index) {
-              return Dismissible(
-                  direction: DismissDirection.horizontal,
-                  onDismissed: (_) {
-                    provider.deleteNote(notes[index].dateCreated);
+        body: FutureBuilder(
+          future: Provider.of<Notes>(context).fetchNotes(),
+          builder: (context, snapshot) => Consumer<Notes>(
+            builder: (context, value, child) {
+              return Column(children: [
+                GestureDetector(
+                  child: SearchBar(
+                    funtion: (_) {},
+                    isSearch: false,
+                  ),
+                  onTap: () {
+                    Navigator.pushNamed(context, SearchPage.pageRoute);
                   },
-                  key: Key(notes[index].dateCreated.toIso8601String()),
-                  child: NoteCard(notes: notes, index: index));
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                NotesGrid(
+                  notesProvider: value,
+                ),
+              ]);
             },
-          ))
-        ]));
+          ),
+        ));
   }
 }

@@ -1,6 +1,7 @@
 import 'package:ebook/Pages/auth_page.dart';
 import 'package:ebook/Pages/create_note_page.dart';
 import 'package:ebook/Pages/notes_page.dart';
+import 'package:ebook/Pages/search_note_page.dart';
 import 'package:ebook/Provider/note_list.dart';
 import 'package:ebook/Services/auth_services.dart';
 import 'package:ebook/firebase_options.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
       create: (context) => Notes(),
       child: MaterialApp(
         routes: {
+          SearchPage.pageRoute: (context) => const SearchPage(),
           NotesPage.routeName: (context) => const NotesPage(),
           CreateNotePage.routeName: (context) => CreateNotePage(edit: false),
         },
