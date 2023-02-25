@@ -6,8 +6,16 @@ import 'package:flutter/material.dart';
 class Notes with ChangeNotifier {
   FirestoreService firestoreService = FirestoreService();
   DBHelper dbHelper = DBHelper();
+  String _searchQuery = '';
+
+  String get searchQuery => _searchQuery;
   List<Note> _notes = [];
   List<Note> get notes => _notes;
+  void setSearchQuery(String query) {
+    _searchQuery = query;
+    notifyListeners();
+  }
+
   noteadd(Note note) async {
     _notes.add(note);
     firestoreService.createNote(
@@ -45,13 +53,14 @@ class Notes with ChangeNotifier {
             noteDescription: e['description'] as String,
             dateCreated: DateTime.parse(e['id'] as String)))
         .toList();
+
     notifyListeners();
   }
 
   deleteNote(DateTime id) async {
     _notes.removeAt(_notes.indexWhere((element) => element.dateCreated == id));
     await DBHelper.deleteNote('notes', id.toIso8601String());
-    firestoreService.deleteNote(id.toIso8601String());
     notifyListeners();
+    firestoreService.deleteNote(id.toIso8601String());
   }
 }

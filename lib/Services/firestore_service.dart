@@ -29,7 +29,7 @@ class FirestoreService {
         .collection('users')
         .doc(firebaseAuth.currentUser!.uid)
         .collection('notes')
-        .doc(id.toString())
+        .doc(id.toIso8601String())
         .set({
       'noteTitle': noteTitle,
       'NoteDesc': noteDesc,

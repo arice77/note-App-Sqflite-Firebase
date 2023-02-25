@@ -48,17 +48,13 @@ class DBHelper {
           .collection('notes')
           .get();
 
-      for (final n in onlineNote.docs) {
-        dbBatch.insert(
-            'notes',
-            {
-              'id': n['id'],
-              'title': n['noteTitle'],
-              'description': n['NoteDesc']
-            },
-            conflictAlgorithm: ConflictAlgorithm.replace);
-      }
-      await dbBatch.commit();
+      onlineNote.docs.forEach((element) {
+        DBHelper.insert('notes', {
+          'id': element['id'],
+          'title': element['noteTitle'],
+          'description': element['NoteDesc']
+        });
+      });
     }
   }
 }
