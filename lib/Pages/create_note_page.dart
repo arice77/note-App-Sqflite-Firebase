@@ -1,5 +1,6 @@
 import 'package:ebook/Model/note_model.dart';
 import 'package:ebook/Provider/note_list.dart';
+import 'package:ebook/Widgets/note_options.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -61,9 +62,10 @@ class _CreateNotePageState extends State<CreateNotePage> {
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return Container(
-          height: height * 1 / 3,
-          color: Colors.black,
+        return NoteOptions(
+          notesExists: widget.initialTitle.toString().isEmpty,
+          height: height,
+          id: widget.id ?? DateTime.now(),
         );
       },
     );

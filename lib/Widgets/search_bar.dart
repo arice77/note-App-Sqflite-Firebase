@@ -14,6 +14,7 @@ class SearchBar extends StatelessWidget {
       elevation: 10,
       child: isSearch
           ? TextField(
+              autofocus: true,
               onChanged: funtion,
               decoration: InputDecoration(
                 prefixIcon: const Icon(

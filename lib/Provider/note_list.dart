@@ -21,7 +21,7 @@ class Notes with ChangeNotifier {
     firestoreService.createNote(
         note.noteTitle, note.noteDescription!, note.dateCreated);
     await DBHelper.insert('notes', {
-      'id': note.dateCreated.toIso8601String(),
+      'id': note.dateCreated.toString(),
       'title': note.noteTitle,
       'description': note.noteDescription!
     });
@@ -38,7 +38,7 @@ class Notes with ChangeNotifier {
     firestoreService.updateNote(
         upNote.noteTitle, upNote.noteDescription!, upNote.dateCreated);
     await DBHelper.updateNote('notes', {
-      'id': upNote.dateCreated.toIso8601String(),
+      'id': upNote.dateCreated.toString(),
       'title': upNote.noteTitle,
       'description': upNote.noteDescription!
     });
@@ -59,8 +59,8 @@ class Notes with ChangeNotifier {
 
   deleteNote(DateTime id) async {
     _notes.removeAt(_notes.indexWhere((element) => element.dateCreated == id));
-    await DBHelper.deleteNote('notes', id.toIso8601String());
+    await DBHelper.deleteNote('notes', id.toString());
     notifyListeners();
-    firestoreService.deleteNote(id.toIso8601String());
+    firestoreService.deleteNote(id.toString());
   }
 }

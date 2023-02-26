@@ -25,7 +25,7 @@ class NotesGrid extends StatelessWidget {
             onDismissed: (_) {
               notesProvider.deleteNote(notesProvider.notes[index].dateCreated);
             },
-            key: Key(notesProvider.notes[index].dateCreated.toIso8601String()),
+            key: Key(notesProvider.notes[index].dateCreated.toString()),
             child: NoteCard(notes: notesProvider.notes, index: index));
       },
     ));

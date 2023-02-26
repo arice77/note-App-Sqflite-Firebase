@@ -16,7 +16,7 @@ class FirestoreService {
         .collection('users')
         .doc(firebaseAuth.currentUser!.uid)
         .collection('notes')
-        .doc(id.toIso8601String())
+        .doc(id.toString())
         .set({
       'noteTitle': noteTitle,
       'NoteDesc': noteDesc,
@@ -29,7 +29,7 @@ class FirestoreService {
         .collection('users')
         .doc(firebaseAuth.currentUser!.uid)
         .collection('notes')
-        .doc(id.toIso8601String())
+        .doc(id.toString())
         .set({
       'noteTitle': noteTitle,
       'NoteDesc': noteDesc,

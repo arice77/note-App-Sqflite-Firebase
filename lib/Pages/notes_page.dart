@@ -1,11 +1,9 @@
 import 'package:ebook/Pages/create_note_page.dart';
 import 'package:ebook/Pages/search_note_page.dart';
 import 'package:ebook/Provider/note_list.dart';
-import 'package:ebook/Widgets/note_card.dart';
 import 'package:ebook/Widgets/notes_grid.dart';
 import 'package:ebook/Widgets/search_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 
 class NotesPage extends StatelessWidget {

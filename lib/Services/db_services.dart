@@ -39,7 +39,6 @@ class DBHelper {
   static Future syncfirebaseToLocal() async {
     String sqlPath = '${await sql.getDatabasesPath()}notes.db';
     final db = await DBHelper.database();
-    final dbBatch = db.batch();
     if (!Directory(sqlPath).existsSync()) {
       QuerySnapshot<Map<String, dynamic>> onlineNote = await FirebaseFirestore
           .instance
@@ -48,13 +47,14 @@ class DBHelper {
           .collection('notes')
           .get();
 
-      onlineNote.docs.forEach((element) {
+      for (var element in onlineNote.docs) {
         DBHelper.insert('notes', {
           'id': element['id'],
           'title': element['noteTitle'],
           'description': element['NoteDesc']
         });
-      });
+        print(element['id']);
+      }
     }
   }
 }
