@@ -14,13 +14,15 @@ class CreateNotePage extends StatefulWidget {
   DateTime? id;
   String? label;
   bool edit;
+  Color? backgroundColor;
   CreateNotePage(
       {super.key,
       this.initialTitle,
       this.initialDesc,
       required this.edit,
       this.label,
-      this.id});
+      this.id,
+      this.backgroundColor});
   static String routeName = '/create-note';
 
   @override
@@ -32,8 +34,22 @@ class _CreateNotePageState extends State<CreateNotePage> {
 
   final TextEditingController _noteDesc = TextEditingController();
   final TextEditingController _noteLabel = TextEditingController();
+  Color selectedColor = Colors.yellow;
 
   final _formKey = GlobalKey<FormState>();
+  final List<Color> listColors = [
+    Colors.yellow,
+    Colors.red,
+    Colors.blueAccent,
+    Colors.greenAccent,
+    Colors.blueGrey,
+    Colors.tealAccent,
+    Colors.lightGreenAccent,
+    Colors.lightBlueAccent,
+    Colors.cyanAccent,
+    Colors.amber,
+    Colors.purpleAccent
+  ];
 
   bool save(BuildContext context) {
     if (_formKey.currentState!.validate()) {
@@ -72,7 +88,7 @@ class _CreateNotePageState extends State<CreateNotePage> {
     _noteLabel.text = widget.label ?? '';
   }
 
-  onTap(double height) {
+  noteOptions(double height) {
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -86,6 +102,42 @@ class _CreateNotePageState extends State<CreateNotePage> {
           shreNoteFunction: shareNote,
         );
       },
+    );
+  }
+
+  colorPalete(double height) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Container(
+        color: const Color.fromARGB(255, 14, 18, 26),
+        height: height * 1 / 10,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          itemBuilder: (context, index) {
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  widget.backgroundColor = listColors[index];
+                  selectedColor = listColors[index];
+                });
+              },
+              child: CircleAvatar(
+                child: selectedColor == listColors[index]
+                    ? Icon(
+                        Icons.check,
+                        color: Colors.white,
+                      )
+                    : null,
+                backgroundColor: listColors[index],
+              ),
+            );
+          },
+          itemCount: listColors.length,
+          separatorBuilder: (BuildContext context, int index) => SizedBox(
+            width: 20,
+          ),
+        ),
+      ),
     );
   }
 
@@ -117,16 +169,14 @@ class _CreateNotePageState extends State<CreateNotePage> {
         height: height * 1 / 11,
         child: Row(children: [
           IconButton(
-            onPressed: () {
-              onTap(height);
-            },
+            onPressed: () {},
             icon: const Icon(
               Icons.add_box,
               color: Colors.white,
             ),
           ),
           IconButton(
-              onPressed: () {},
+              onPressed: () => colorPalete(height),
               icon: const Icon(
                 Icons.color_lens,
                 color: Colors.white,
@@ -140,14 +190,14 @@ class _CreateNotePageState extends State<CreateNotePage> {
             ),
           ),
           IconButton(
-              onPressed: () {},
+              onPressed: () => noteOptions(height),
               icon: const Icon(
                 Icons.menu,
                 color: Colors.white,
               ))
         ]),
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: widget.backgroundColor ?? Colors.white,
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
@@ -172,7 +222,7 @@ class _CreateNotePageState extends State<CreateNotePage> {
               ))
         ],
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: widget.backgroundColor ?? Colors.white,
       ),
       body: SingleChildScrollView(
         child: Padding(
