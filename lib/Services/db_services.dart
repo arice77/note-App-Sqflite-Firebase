@@ -12,11 +12,11 @@ class DBHelper {
     return sql.openDatabase(path.join(dbPath, 'notes.db'),
         onCreate: (db, version) {
       return db.execute(
-          'CREATE TABLE notes(id TEXT PRIMARY KEY,title TEXT,description TEXT)');
+          'CREATE TABLE notes(id TEXT PRIMARY KEY,title TEXT,description TEXT,label TEXT)');
     }, version: 1);
   }
 
-  static Future<void> insert(String table, Map<String, Object> data) async {
+  static Future<void> insert(String table, Map<String, dynamic> data) async {
     final db = await DBHelper.database();
     db.insert(table, data, conflictAlgorithm: ConflictAlgorithm.replace);
   }
@@ -38,7 +38,6 @@ class DBHelper {
 
   static Future syncfirebaseToLocal() async {
     String sqlPath = '${await sql.getDatabasesPath()}notes.db';
-    final db = await DBHelper.database();
     if (!Directory(sqlPath).existsSync()) {
       QuerySnapshot<Map<String, dynamic>> onlineNote = await FirebaseFirestore
           .instance
@@ -53,7 +52,6 @@ class DBHelper {
           'title': element['noteTitle'],
           'description': element['NoteDesc']
         });
-        print(element['id']);
       }
     }
   }

@@ -4,14 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class NoteOptions extends StatelessWidget {
+  final Function labelFunction;
   final bool notesExists;
   final double height;
   final DateTime id;
-  const NoteOptions(
-      {super.key,
-      required this.height,
-      required this.id,
-      required this.notesExists});
+  final TextEditingController labelController;
+  final Function createCpyFunction;
+  final Function shreNoteFunction;
+  const NoteOptions({
+    super.key,
+    required this.height,
+    required this.id,
+    required this.notesExists,
+    required this.labelController,
+    required this.labelFunction,
+    required this.createCpyFunction,
+    required this.shreNoteFunction,
+  });
 
   delete(Notes provider, BuildContext context) async {
     if (notesExists) {
@@ -21,29 +30,34 @@ class NoteOptions extends StatelessWidget {
     Navigator.of(context).pushNamed(NotesPage.routeName);
   }
 
-  label(BuildContext context) {
+  label(BuildContext context, Notes provider) {
     showDialog(
       context: context,
       builder: (context) => Dialog(
           child: Container(
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 13),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 13),
         color: const Color.fromARGB(255, 14, 18, 26),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextField(
+            TextFormField(
+              style: const TextStyle(color: Colors.white),
+              controller: labelController,
               autofocus: true,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   hintText: 'Label',
-                  hintStyle: TextStyle(color: Colors.white),
-                  focusColor: const Color.fromARGB(255, 50, 104, 254)),
+                  hintStyle: TextStyle(color: Colors.grey),
+                  focusColor: Color.fromARGB(255, 50, 104, 254)),
             ),
             TextButton(
-                onPressed: () {},
-                child: Text(
+                onPressed: () {
+                  labelFunction();
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                },
+                child: const Text(
                   'Save',
-                  style:
-                      TextStyle(color: const Color.fromARGB(255, 50, 104, 254)),
+                  style: TextStyle(color: Color.fromARGB(255, 50, 104, 254)),
                 ))
           ],
         ),
@@ -61,9 +75,9 @@ class NoteOptions extends StatelessWidget {
         children: [
           customListTile(
               Icons.delete, 'Delete note', () => delete(provider, context)),
-          customListTile(Icons.copy, 'Make a copy', () => null),
-          customListTile(Icons.share, 'Share', () {}),
-          customListTile(Icons.label, 'Labels', () => label(context))
+          customListTile(Icons.copy, 'Make a copy', () => createCpyFunction()),
+          customListTile(Icons.share, 'Share', () => shreNoteFunction()),
+          customListTile(Icons.label, 'Labels', () => label(context, provider))
         ],
       ),
     );

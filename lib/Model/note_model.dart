@@ -4,10 +4,11 @@ class Note {
   String noteTitle;
   String? noteDescription;
   DateTime dateCreated;
-  String? tag;
+  String? label;
   Color? color;
   Note(
       {required this.noteTitle,
       this.noteDescription,
-      required this.dateCreated});
+      required this.dateCreated,
+      this.label});
 }

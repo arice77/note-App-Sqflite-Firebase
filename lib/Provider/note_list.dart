@@ -19,11 +19,12 @@ class Notes with ChangeNotifier {
   noteadd(Note note) async {
     _notes.add(note);
     firestoreService.createNote(
-        note.noteTitle, note.noteDescription!, note.dateCreated);
+        note.noteTitle, note.noteDescription, note.dateCreated, note.label);
     await DBHelper.insert('notes', {
       'id': note.dateCreated.toString(),
       'title': note.noteTitle,
-      'description': note.noteDescription!
+      'description': note.noteDescription,
+      'label': note.label,
     });
 
     notifyListeners();
@@ -35,12 +36,13 @@ class Notes with ChangeNotifier {
         .first;
     note.noteTitle = upNote.noteTitle;
     note.noteDescription = upNote.noteDescription;
-    firestoreService.updateNote(
-        upNote.noteTitle, upNote.noteDescription!, upNote.dateCreated);
+    firestoreService.updateNote(upNote.noteTitle, upNote.noteDescription!,
+        upNote.dateCreated, note.label);
     await DBHelper.updateNote('notes', {
       'id': upNote.dateCreated.toString(),
       'title': upNote.noteTitle,
-      'description': upNote.noteDescription!
+      'description': upNote.noteDescription,
+      'label': upNote.label,
     });
     notifyListeners();
   }
@@ -51,7 +53,10 @@ class Notes with ChangeNotifier {
         .map((e) => Note(
             noteTitle: e['title'] as String,
             noteDescription: e['description'] as String,
-            dateCreated: DateTime.parse(e['id'] as String)))
+            dateCreated: DateTime.parse(
+              e['id'] as String,
+            ),
+            label: e['label'] as String))
         .toList();
 
     notifyListeners();

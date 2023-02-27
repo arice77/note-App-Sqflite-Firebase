@@ -20,12 +20,14 @@ class NoteCard extends StatelessWidget {
                 initialDesc: notes[index].noteDescription,
                 edit: true,
                 id: notes[index].dateCreated,
+                label: notes[index].label,
               )),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final note = notes[index];
     return SizedBox(
       child: GestureDetector(
         onTap: () => openEditor(context),
@@ -42,21 +44,36 @@ class NoteCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  notes[index].noteTitle,
+                  note.noteTitle,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(color: Colors.white),
                 ),
                 const SizedBox(
                   height: 10,
                 ),
-                if (notes[index].noteDescription!.isNotEmpty)
+                if (note.noteDescription!.isNotEmpty)
                   Text(
-                    notes[index].noteDescription!.length > 200
-                        ? notes[index].noteDescription!.substring(0, 200)
-                        : notes[index].noteDescription ?? '',
-                    style: const TextStyle(color: Colors.grey),
+                    note.noteDescription!.length > 200
+                        ? note.noteDescription!.substring(0, 200)
+                        : notes[index].noteDescription!,
+                    style: const TextStyle(color: Colors.white60),
                     overflow: TextOverflow.clip,
                   ),
+                if (notes[index].label!.isNotEmpty)
+                  Container(
+                    margin: const EdgeInsets.only(top: 8),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(color: const Color(0xFF757575))),
+                    child: Text(
+                      notes[index].label!,
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  )
               ],
             ),
           ),
