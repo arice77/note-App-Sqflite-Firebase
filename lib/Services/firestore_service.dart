@@ -11,8 +11,8 @@ class FirestoreService {
         .set({"username": userName});
   }
 
-  createNote(String noteTitle, String? noteDesc, DateTime id,
-      String? noteLabel) async {
+  createNote(String noteTitle, String? noteDesc, DateTime id, String? noteLabel,
+      String? bgcolor) async {
     await firebaseFirestore
         .collection('users')
         .doc(firebaseAuth.currentUser!.uid)
@@ -22,12 +22,13 @@ class FirestoreService {
       'noteTitle': noteTitle,
       'NoteDesc': noteDesc,
       'label': noteLabel,
-      'id': id.toString()
+      'id': id.toString(),
+      'bgcolor': bgcolor
     });
   }
 
-  updateNote(String noteTitle, String? noteDesc, DateTime id,
-      String? noteLabel) async {
+  updateNote(String noteTitle, String? noteDesc, DateTime id, String? noteLabel,
+      String? bgcolor) async {
     await firebaseFirestore
         .collection('users')
         .doc(firebaseAuth.currentUser!.uid)
@@ -37,7 +38,8 @@ class FirestoreService {
       'noteTitle': noteTitle,
       'NoteDesc': noteDesc,
       'label': noteLabel,
-      'id': id.toString()
+      'id': id.toString(),
+      'bgcolor': bgcolor
     });
   }
 

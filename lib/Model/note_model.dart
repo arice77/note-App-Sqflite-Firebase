@@ -10,5 +10,6 @@ class Note {
       {required this.noteTitle,
       this.noteDescription,
       required this.dateCreated,
-      this.label});
+      this.label,
+      this.color});
 }

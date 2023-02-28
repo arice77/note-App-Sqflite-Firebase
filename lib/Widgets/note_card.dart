@@ -21,6 +21,7 @@ class NoteCard extends StatelessWidget {
                 edit: true,
                 id: notes[index].dateCreated,
                 label: notes[index].label,
+                backgroundColor: notes[index].color,
               )),
     );
   }
@@ -33,7 +34,7 @@ class NoteCard extends StatelessWidget {
         onTap: () => openEditor(context),
         child: Card(
           margin: const EdgeInsets.symmetric(horizontal: 5),
-          color: const Color.fromARGB(255, 22, 28, 39),
+          color: notes[index].color ?? const Color.fromARGB(255, 22, 28, 39),
           shadowColor: const Color.fromARGB(147, 2, 25, 44),
           elevation: 50,
           shape:

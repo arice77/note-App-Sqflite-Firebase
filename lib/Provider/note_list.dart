@@ -19,12 +19,17 @@ class Notes with ChangeNotifier {
   noteadd(Note note) async {
     _notes.add(note);
     firestoreService.createNote(
-        note.noteTitle, note.noteDescription, note.dateCreated, note.label);
+        note.noteTitle,
+        note.noteDescription,
+        note.dateCreated,
+        note.label,
+        note.color?.value.toRadixString(16).substring(2));
     await DBHelper.insert('notes', {
       'id': note.dateCreated.toString(),
       'title': note.noteTitle,
       'description': note.noteDescription,
       'label': note.label,
+      'bgcolor': note.color?.value.toRadixString(16).substring(2),
     });
 
     notifyListeners();
@@ -36,13 +41,18 @@ class Notes with ChangeNotifier {
         .first;
     note.noteTitle = upNote.noteTitle;
     note.noteDescription = upNote.noteDescription;
-    firestoreService.updateNote(upNote.noteTitle, upNote.noteDescription!,
-        upNote.dateCreated, note.label);
+    firestoreService.updateNote(
+        upNote.noteTitle,
+        upNote.noteDescription!,
+        upNote.dateCreated,
+        note.label,
+        note.color?.value.toRadixString(16).substring(2));
     await DBHelper.updateNote('notes', {
       'id': upNote.dateCreated.toString(),
       'title': upNote.noteTitle,
       'description': upNote.noteDescription,
       'label': upNote.label,
+      'bgcolor': upNote.color?.value.toRadixString(16).substring(2),
     });
     notifyListeners();
   }
@@ -50,13 +60,18 @@ class Notes with ChangeNotifier {
   fetchNotes() async {
     final dataList = await DBHelper.getNotes('notes');
     _notes = dataList
-        .map((e) => Note(
-            noteTitle: e['title'] as String,
-            noteDescription: e['description'] as String,
-            dateCreated: DateTime.parse(
-              e['id'] as String,
-            ),
-            label: e['label'] as String))
+        .map(
+          (e) => Note(
+              noteTitle: e['title'] as String,
+              noteDescription: e['description'] as String,
+              dateCreated: DateTime.parse(
+                e['id'] as String,
+              ),
+              label: e['label'] as String,
+              color: e['bgcolor'] == null
+                  ? null
+                  : Color(int.parse("0xFF${e['bgcolor']}"))),
+        )
         .toList();
 
     notifyListeners();

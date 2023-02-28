@@ -12,7 +12,7 @@ class DBHelper {
     return sql.openDatabase(path.join(dbPath, 'notes.db'),
         onCreate: (db, version) {
       return db.execute(
-          'CREATE TABLE notes(id TEXT PRIMARY KEY,title TEXT,description TEXT,label TEXT)');
+          'CREATE TABLE notes(id TEXT PRIMARY KEY,title TEXT,description TEXT,label TEXT,bgcolor TEXT)');
     }, version: 1);
   }
 
@@ -50,7 +50,9 @@ class DBHelper {
         DBHelper.insert('notes', {
           'id': element['id'],
           'title': element['noteTitle'],
-          'description': element['NoteDesc']
+          'description': element['NoteDesc'],
+          'label': element['label'],
+          'bgcolor': element['bgcolor']
         });
       }
     }

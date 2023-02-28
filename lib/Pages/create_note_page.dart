@@ -61,13 +61,15 @@ class _CreateNotePageState extends State<CreateNotePage> {
             noteTitle: _noteTitle.text,
             dateCreated: widget.id!,
             noteDescription: _noteDesc.text,
-            label: _noteLabel.text));
+            label: _noteLabel.text,
+            color: widget.backgroundColor));
       } else {
         notesData.noteadd(Note(
             noteTitle: _noteTitle.text,
             noteDescription: _noteDesc.text,
             dateCreated: DateTime.now(),
-            label: _noteLabel.text));
+            label: _noteLabel.text,
+            color: widget.backgroundColor));
       }
       return true;
     }
@@ -107,6 +109,7 @@ class _CreateNotePageState extends State<CreateNotePage> {
 
   colorPalete(double height) {
     showModalBottomSheet(
+      barrierColor: Colors.transparent,
       context: context,
       builder: (context) => Container(
         color: const Color.fromARGB(255, 14, 18, 26),
@@ -122,13 +125,13 @@ class _CreateNotePageState extends State<CreateNotePage> {
                 });
               },
               child: CircleAvatar(
+                backgroundColor: listColors[index],
                 child: selectedColor == listColors[index]
                     ? Icon(
                         Icons.check,
-                        color: Colors.white,
+                        color: Colors.black,
                       )
                     : null,
-                backgroundColor: listColors[index],
               ),
             );
           },
